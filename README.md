@@ -1,6 +1,9 @@
 # iota.transactionSpammer.js
 Spams the IOTA newtork with dummy messages, confirming transactions while doing so.
 
+## Example Usage
+See [https://prizz.github.io/iota-transaction-spammer-webapp/](https://prizz.github.io/iota-transaction-spammer-webapp/)
+
 ## Basic Usage
 
 Add this to the header of your html file
