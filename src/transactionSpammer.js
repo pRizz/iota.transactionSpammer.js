@@ -9,10 +9,33 @@ window.iotaTransactionSpammer = (function(){
     var iota // initialized in initializeIOTA
     var started = false
 
-    const validProviders = [ // must be https if the hosting site is served over https; SSL rules
+    // from https://iotasupport.com/providers.json
+    const httpProviders = [
+        "http://iota.bitfinex.com:80",
+        "http://service.iotasupport.com:14265",
+        "http://eugene.iota.community:14265",
+        "http://eugene.iotasupport.com:14999",
+        "http://eugeneoldisoft.iotasupport.com:14265",
+        "http://node01.iotatoken.nl:14265",
+        "http://node02.iotatoken.nl:14265",
+        "http://node03.iotatoken.nl:15265",
+        "http://mainnet.necropaz.com:14500",
+        "http://iota.digits.blue:14265",
+        "http://wallets.iotamexico.com:80",
+        "http://5.9.137.199:14265",
+        "http://5.9.118.112:14265",
+        "http://5.9.149.169:14265",
+        "http://88.198.230.98:14265",
+        "http://176.9.3.149:14265",
+        "http://node.lukaseder.de:14265"
+    ]
+
+    const httpsProviders = [
         'https://node.tangle.works:443',
         'https://n1.iota.nu:443'
     ]
+
+    const validProviders = getValidProviders()
     var currentProvider = getRandomProvider()
 
     var depth = 10
@@ -30,6 +53,24 @@ window.iotaTransactionSpammer = (function(){
     var transactionCount = 0
     var confirmationCount = 0
     var averageConfirmationDuration = 0 // milliseconds
+
+    // must be https if the hosting site is served over https; SSL rules
+    function getValidProviders() {
+        if(isRunningOverHTTPS()) {
+            return httpProviders.concat(httpsProviders)
+        } else {
+            return httpProviders
+        }
+    }
+
+    function isRunningOverHTTPS() {
+        switch(window.location.protocol) {
+            case 'https:':
+                return true
+            default:
+                return false
+        }
+    }
 
     // returns a depth in [4, 12] inclusive
     function generateDepth() {
