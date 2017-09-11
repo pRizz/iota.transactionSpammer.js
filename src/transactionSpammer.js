@@ -13,7 +13,7 @@ window.iotaTransactionSpammer = (function(){
         'https://node.tangle.works:443',
         'https://n1.iota.nu:443'
     ]
-    var currentProvider = validProviders[0]
+    var currentProvider = getRandomProvider()
 
     var depth = 10
     var weight = 15
@@ -92,9 +92,13 @@ window.iotaTransactionSpammer = (function(){
         })
     }
 
+    function getRandomProvider() {
+        return validProviders[Math.floor(Math.random() * validProviders.length)]
+    }
+
     function changeProviderAndSync() {
         eventEmitter.emitEvent('state', ['Randomly changing IOTA nodes'])
-        currentProvider = validProviders[Math.floor(Math.random() * validProviders.length)]
+        currentProvider = getRandomProvider()
         eventEmitter.emitEvent('state', [`New IOTA node: ${currentProvider}`])
         restartSpamming()
     }
