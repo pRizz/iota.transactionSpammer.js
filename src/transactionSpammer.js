@@ -111,7 +111,9 @@ window.iotaTransactionSpammer = (function(){
         iota.api.sendTransfer(spamSeed, generateDepth(), weight, transfers, function(error, success){
             if (error) {
                 eventEmitter.emitEvent('state', ['Error occurred while sending transactions'])
-                changeProviderAndSync()
+                setTimeout(function(){
+                    changeProviderAndSync()
+                }, 1000)
                 return
             }
             const transactionEndDate = Date.now()
@@ -150,7 +152,9 @@ window.iotaTransactionSpammer = (function(){
         iota.api.getNodeInfo(function(error, success){
             if(error) {
                 eventEmitter.emitEvent('state', ['Error occurred while checking if node is synced'])
-                changeProviderAndSync()
+                setTimeout(function(){
+                    changeProviderAndSync()
+                }, 1000)
                 return
             }
 
