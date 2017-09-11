@@ -31,8 +31,8 @@ window.iotaTransactionSpammer = (function(){
     ]
 
     const httpsProviders = [
-        'https://node.tangle.works:443',
-        'https://n1.iota.nu:443'
+        //'https://node.tangle.works:443', // commented out due to network issues; asked by node operator
+        //'https://n1.iota.nu:443' // commented out due to network issues; asked by node operator
     ]
 
     const validProviders = getValidProviders()
