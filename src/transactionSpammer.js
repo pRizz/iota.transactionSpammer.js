@@ -31,6 +31,12 @@ window.iotaTransactionSpammer = (function(){
     var confirmationCount = 0
     var averageConfirmationDuration = 0 // milliseconds
 
+    // returns a depth in [4, 12] inclusive
+    function generateDepth() {
+        depth = Math.floor(Math.random() * (12 - 4 + 1)) + 4
+        return depth
+    }
+
     function generateSeed() {
         const validChars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ9'
         return Array.from(new Array(81), (x, i) => validChars[Math.floor(Math.random() * validChars.length)]).join('')
@@ -61,7 +67,7 @@ window.iotaTransactionSpammer = (function(){
         const localConfirmationCount = transferCount * 2
         const transactionStartDate = Date.now()
         eventEmitter.emitEvent('state', [`Performing PoW (Proof of Work) on ${localConfirmationCount} transactions`])
-        iota.api.sendTransfer(spamSeed, depth, weight, transfers, function(error, success){
+        iota.api.sendTransfer(spamSeed, generateDepth(), weight, transfers, function(error, success){
             if (error) {
                 eventEmitter.emitEvent('state', ['Error occurred while sending transactions'])
                 changeProviderAndSync()
