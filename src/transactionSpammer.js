@@ -57,9 +57,9 @@ window.iotaTransactionSpammer = (function(){
     // must be https if the hosting site is served over https; SSL rules
     function getValidProviders() {
         if(isRunningOverHTTPS()) {
-            return httpProviders.concat(httpsProviders)
+            return httpsProviders
         } else {
-            return httpProviders
+            return httpProviders.concat(httpsProviders)
         }
     }
 
