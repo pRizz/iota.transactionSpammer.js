@@ -6,13 +6,13 @@ See [https://prizz.github.io/iota-transaction-spammer-webapp/](https://prizz.git
 
 ## Basic Usage
 
-Add this to the header of your html file
+Add these files to your site and add these lines to the header of your html file
 ```
-<script type="text/javascript" src="deps/iota.transactionSpammer.js/src/lib/iota.min.js"></script>
-<script type="text/javascript" src="deps/iota.transactionSpammer.js/src/lib/curl.min.js"></script>
-<script type="text/javascript" src="deps/iota.transactionSpammer.js/src/lib/EventEmitter.min.js"></script>
-<script type="text/javascript" src="deps/iota.transactionSpammer.js/src/transactionSpammer.js"></script>
-<script type="text/javascript" src="deps/iota.transactionSpammer.js/src/autostartSpamming.js"></script>
+<script type="text/javascript" src="src/lib/iota.min.js"></script>
+<script type="text/javascript" src="src/lib/curl.min.js"></script>
+<script type="text/javascript" src="src/lib/EventEmitter.min.js"></script>
+<script type="text/javascript" src="src/transactionSpammer.js"></script>
+<script type="text/javascript" src="src/autostartSpamming.js"></script>
 ```
 
 If you want to customize the settings of the spammer, do not include the `autostartSpamming.js` file.
