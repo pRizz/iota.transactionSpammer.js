@@ -102,37 +102,133 @@ window.iotaTransactionSpammer = (function(){
         curl.overrideAttachToTangle(iota.api)
     }
 
+    // Iota api extensions
+    function sendTransfer2steps(seed, depth, minWeightMagnitude, transfers, options, callback1, callback2) {
+        // Copy of iota.api.sendTransfer, but with 1 extra parameter (callback2),
+        // and using sendTrytes2steps instead of iota.api.sendTrytes.
+        // To avoid potential errors, the parameter 'options' is mandatory,
+        // unlike the original sendTransfer, where it could be omitted.
+        // If no 'options' are present, simply use {} as 'options' when calling.
+        // Important ! Parameter validation has been removed, make sure they are correct when calling.
+        var self = this;
+
+        // Validity check for number of arguments
+        if (arguments.length != 7) {
+            return callback1(new Error("Invalid number of arguments"));
+        }
+
+        // Check if correct depth and minWeightMagnitude
+        // inputValidator <-> iota.valid
+        if (!iota.valid.isValue(depth) && !iota.valid.isValue(minWeightMagnitude)) {
+
+            return callback(errors.invalidInputs());
+        }
+
+        self.prepareTransfers(seed, transfers, options, function(error, trytes) {
+
+            if (error) {
+                return callback1(error)
+            }
+
+            sendTrytes2steps.call(self, trytes, depth, minWeightMagnitude, callback1, callback2);
+        })
+    }
+    function sendTrytes2steps(trytes, depth, minWeightMagnitude, callback1, callback2) {
+        // Does exactly what iota.api.sendTrytes() does, but in two steps:
+        // First, it gets the transactions to approve without attaching to tangle (i.e. without doing PoW),
+        //   and then calls callback1.
+        // Second, it attaches to the Tangle (does PoW) and finally calls callback2.
+        // This allows for other tasks (logging, resource management, etc) to be done by callback1,
+        // just before starting the (computationally expensive) PoW calculation.
+
+        var self = this;
+
+        // Inputs already ok, because we are called by sendTransfer2steps().
+
+        // Get branch and trunk
+        self.getTransactionsToApprove(depth, function(error, toApprove) {
+
+            if (error) {
+                return callback1(error)
+            }
+
+            // HERE is the only real difference:
+            callback1(null, toApprove);
+            // everything afterwards is handled by callback2
+
+            // attach to tangle - do pow
+            self.attachToTangle(toApprove.trunkTransaction, toApprove.branchTransaction, minWeightMagnitude, trytes, function(error, attached) {
+
+                if (error) {
+                    return callback2(error)
+                }
+
+                // Broadcast and store tx
+                self.storeAndBroadcast(attached, function(error, success) {
+
+                    if (error) {
+                        return callback2(error);
+                    }
+
+                    var finalTxs = [];
+
+                    attached.forEach(function(trytes) {
+                        finalTxs.push(iota.utils.transactionObject(trytes)); // utils <-> iota.utils
+                    })
+
+                    return callback2(null, finalTxs);
+
+                })
+            })
+        })
+    }
     function sendMessages() {
         const transfers = generateTransfers()
         const transferCount = transfers.length
         const localConfirmationCount = transferCount * 2
         const transactionStartDate = Date.now()
-        eventEmitter.emitEvent('state', [`Performing PoW (Proof of Work) on ${localConfirmationCount} transactions`])
-        iota.api.sendTransfer(spamSeed, generateDepth(), weight, transfers, function(error, success){
-            if (error) {
-                eventEmitter.emitEvent('state', ['Error occurred while sending transactions'])
-                setTimeout(function(){
-                    changeProviderAndSync()
-                }, 1000)
-                return
+        eventEmitter.emitEvent('state', [`Requesting ${localConfirmationCount} transactions to create confirmations for`])
+        sendTransfer2steps.call(iota.api, spamSeed, generateDepth(), weight, transfers, {},
+            // Network related
+            function(error, success) {
+                if (error) {
+                    eventEmitter.emitEvent('state', ['Error occurred while getting transactions'])
+                    setTimeout(function(){
+                        changeProviderAndSync()
+                    }, 1000)
+                    return
+                }
+                eventEmitter.emitEvent('state', [`Performing PoW (Proof of Work) on ${localConfirmationCount} transactions`])
+                eventEmitter.emitEvent('working', [true])
+            },
+            // PoW related
+            function(error, success) {
+                if (error) {
+                    eventEmitter.emitEvent('state', ['Error occurred while attaching transactions'])
+                    setTimeout(function(){
+                        changeProviderAndSync()
+                    }, 1000)
+                    return
+                }
+                const transactionEndDate = Date.now()
+                const transactionDuration = transactionEndDate - transactionStartDate // milliseconds
+                const oldTotalConfirmationDuration = averageConfirmationDuration * confirmationCount
+
+                transactionCount += transferCount
+                confirmationCount += localConfirmationCount
+                averageConfirmationDuration = (oldTotalConfirmationDuration + transactionDuration) / confirmationCount
+
+                eventEmitter.emitEvent('state', [`Completed PoW (Proof of Work) on ${localConfirmationCount} transactions`])
+                eventEmitter.emitEvent('transactionCountChanged', [transactionCount])
+                eventEmitter.emitEvent('confirmationCountChanged', [confirmationCount])
+                eventEmitter.emitEvent('averageConfirmationDurationChanged', [averageConfirmationDuration])
+
+                eventEmitter.emitEvent('transactionCompleted', [success])
+                eventEmitter.emitEvent('working', [false])
+
+                checkIfNodeIsSynced()
             }
-            const transactionEndDate = Date.now()
-            const transactionDuration = transactionEndDate - transactionStartDate // milliseconds
-            const oldTotalConfirmationDuration = averageConfirmationDuration * confirmationCount
-
-            transactionCount += transferCount
-            confirmationCount += localConfirmationCount
-            averageConfirmationDuration = (oldTotalConfirmationDuration + transactionDuration) / confirmationCount
-
-            eventEmitter.emitEvent('state', [`Completed PoW (Proof of Work) on ${localConfirmationCount} transactions`])
-            eventEmitter.emitEvent('transactionCountChanged', [transactionCount])
-            eventEmitter.emitEvent('confirmationCountChanged', [confirmationCount])
-            eventEmitter.emitEvent('averageConfirmationDurationChanged', [averageConfirmationDuration])
-
-            eventEmitter.emitEvent('transactionCompleted', [success])
-
-            checkIfNodeIsSynced()
-        })
+        )
     }
 
     function getRandomProvider() {
