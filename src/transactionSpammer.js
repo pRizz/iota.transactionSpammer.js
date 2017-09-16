@@ -9,7 +9,7 @@ window.iotaTransactionSpammer = (function(){
     var iota // initialized in initializeIOTA
     var started = false
 
-    // from https://iotasupport.com/providers.json
+    // from 'https://iotasupport.com/providers.json' + requested additions
     const httpProviders = [
         "http://iota.bitfinex.com:80",
         "http://service.iotasupport.com:14265",
@@ -27,12 +27,14 @@ window.iotaTransactionSpammer = (function(){
         "http://5.9.149.169:14265",
         "http://88.198.230.98:14265",
         "http://176.9.3.149:14265",
-        "http://node.lukaseder.de:14265"
+        "http://node.lukaseder.de:14265",
+        "http://iota.preissler.me:80"
     ]
 
     const httpsProviders = [
         //'https://node.tangle.works:443', // commented out due to network issues; asked by node operator
         //'https://n1.iota.nu:443' // commented out due to network issues; asked by node operator
+        "https://iota.preissler.me:443"
     ]
 
     const validProviders = getValidProviders()
