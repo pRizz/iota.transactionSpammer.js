@@ -36,7 +36,10 @@ window.iotaTransactionSpammer = (function(){
     ]
 
     const validProviders = getValidProviders()
-    var currentProvider = getRandomProvider()
+    var _currentProvider = getRandomProvider()
+
+    // Overrides the _currentProvider
+    var customProvider = null
 
     var depth = 10
     var weight = 15
@@ -53,6 +56,11 @@ window.iotaTransactionSpammer = (function(){
     var transactionCount = 0
     var confirmationCount = 0
     var averageConfirmationDuration = 0 // milliseconds
+
+    function getCurrentProvider() {
+        if (customProvider) { return customProvider }
+        return _currentProvider
+    }
 
     // must be https if the hosting site is served over https; SSL rules
     function getValidProviders() {
@@ -97,8 +105,8 @@ window.iotaTransactionSpammer = (function(){
     }
 
     function initializeIOTA() {
-        eventEmitter.emitEvent('state', [`Initializing IOTA connection to ${currentProvider}`])
-        iota = new iotaLib({'provider': currentProvider})
+        eventEmitter.emitEvent('state', [`Initializing IOTA connection to ${getCurrentProvider()}`])
+        iota = new iotaLib({'provider': getCurrentProvider()})
         curl.overrideAttachToTangle(iota.api)
     }
 
@@ -141,8 +149,8 @@ window.iotaTransactionSpammer = (function(){
 
     function changeProviderAndSync() {
         eventEmitter.emitEvent('state', ['Randomly changing IOTA nodes'])
-        currentProvider = getRandomProvider()
-        eventEmitter.emitEvent('state', [`New IOTA node: ${currentProvider}`])
+        _currentProvider = getRandomProvider()
+        eventEmitter.emitEvent('state', [`New IOTA node: ${getCurrentProvider()}`])
         restartSpamming()
     }
 
@@ -192,11 +200,12 @@ window.iotaTransactionSpammer = (function(){
     }
 
     return {
-        // View options, or set options if params are specified
+        // Get options, or set options if params are specified
         options: function(params) {
             if(!params) {
                 return {
-                    provider: currentProvider,
+                    provider: _currentProvider,
+                    customProvider: customProvider,
                     depth: depth,
                     weight: weight,
                     spamSeed: spamSeed,
@@ -205,7 +214,14 @@ window.iotaTransactionSpammer = (function(){
                     numberOfTransfersInBundle: numberOfTransfersInBundle
                 }
             }
-            if(params.hasOwnProperty("provider")) { currentProvider = params.provider }
+            if(params.hasOwnProperty("provider")) {
+                _currentProvider = params.provider
+                initializeIOTA()
+            }
+            if(params.hasOwnProperty("customProvider")) {
+                customProvider = params.customProvider
+                initializeIOTA()
+            }
             if(params.hasOwnProperty("depth")) { depth = params.depth }
             if(params.hasOwnProperty("weight")) { weight = params.weight }
             if(params.hasOwnProperty("spamSeed")) { spamSeed = params.spamSeed }
@@ -224,9 +240,12 @@ window.iotaTransactionSpammer = (function(){
             console.error("stopSpamming() NOT IMPLEMENTED")
         },
         tritifyURL: tritifyURL,
-        eventEmitter: eventEmitter,
+        eventEmitter: eventEmitter, // TODO: emit an event when the provider randomly changes due to an error
         getTransactionCount: () => transactionCount,
         getConfirmationCount: () => confirmationCount,
-        getAverageConfirmationDuration: () => averageConfirmationDuration
+        getAverageConfirmationDuration: () => averageConfirmationDuration,
+        httpProviders: httpProviders,
+        httpsProviders: httpsProviders,
+        validProviders: validProviders,
     }
 })()
