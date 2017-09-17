@@ -9,19 +9,25 @@ window.iotaTransactionSpammer = (function(){
     var iota // initialized in initializeIOTA
     var started = false
 
-    // from 'https://iotasupport.com/providers.json' + requested additions
+    // TODO: use this for listening to changes in options and emit change to eventEmitter
+    const optionsProxy = new Proxy({
+        isLoadBalancing: true // change node after every PoW
+    }, {
+        set: (obj, prop, value) => {
+            obj[prop] = value
+            eventEmitter.emitEvent('optionChanged', [prop, value])
+            return true
+        }
+    })
+
+    // from 'https://iotasupport.com/providers.json' + requested additions - unreliable nodes
     const httpProviders = [
         "http://iota.bitfinex.com:80",
         "http://service.iotasupport.com:14265",
-        "http://eugene.iota.community:14265",
-        "http://eugene.iotasupport.com:14999",
-        "http://eugeneoldisoft.iotasupport.com:14265",
         "http://node01.iotatoken.nl:14265",
         "http://node02.iotatoken.nl:14265",
         "http://node03.iotatoken.nl:15265",
         "http://mainnet.necropaz.com:14500",
-        "http://iota.digits.blue:14265",
-        "http://wallets.iotamexico.com:80",
         "http://5.9.137.199:14265",
         "http://5.9.118.112:14265",
         "http://5.9.149.169:14265",
@@ -141,6 +147,11 @@ window.iotaTransactionSpammer = (function(){
 
             eventEmitter.emitEvent('transactionCompleted', [success])
 
+            if(optionsProxy.isLoadBalancing) {
+                eventEmitter.emitEvent('state', ['Changing nodes to balance the load'])
+                return changeProviderAndSync()
+            }
+
             checkIfNodeIsSynced()
         })
     }
@@ -213,7 +224,8 @@ window.iotaTransactionSpammer = (function(){
                     spamSeed: spamSeed,
                     message: message,
                     tag: tag,
-                    numberOfTransfersInBundle: numberOfTransfersInBundle
+                    numberOfTransfersInBundle: numberOfTransfersInBundle,
+                    isLoadBalancing: optionsProxy.isLoadBalancing
                 }
             }
             if(params.hasOwnProperty("provider")) {
@@ -230,6 +242,7 @@ window.iotaTransactionSpammer = (function(){
             if(params.hasOwnProperty("message")) { message = params.message }
             if(params.hasOwnProperty("tag")) { tag = params.tag }
             if(params.hasOwnProperty("numberOfTransfersInBundle")) { numberOfTransfersInBundle = params.numberOfTransfersInBundle }
+            if(params.hasOwnProperty("isLoadBalancing")) { optionsProxy.isLoadBalancing = params.isLoadBalancing }
         },
         startSpamming: function() {
             if(started) { return }
