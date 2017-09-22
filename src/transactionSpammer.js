@@ -34,7 +34,8 @@ window.iotaTransactionSpammer = (function(){
         "http://88.198.230.98:14265",
         "http://176.9.3.149:14265",
         "http://node.lukaseder.de:14265",
-        "http://iota.preissler.me:80"
+        "http://iota.preissler.me:80",
+        "http://iota.love:16000"
     ]
 
     const httpsProviders = [
