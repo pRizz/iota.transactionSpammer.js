@@ -175,7 +175,7 @@ window.iotaTransactionSpammer = (function(){
                 eventEmitter.emitEvent('state', ['Error occurred while checking if node is synced'])
                 setTimeout(function(){
                     changeProviderAndSync()
-                }, 1000)
+                }, 5000)
                 return
             }
 
