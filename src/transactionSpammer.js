@@ -22,7 +22,6 @@ window.iotaTransactionSpammer = (function(){
 
     // from 'https://iotasupport.com/providers.json' + requested additions - unreliable nodes
     const httpProviders = [
-        "http://iota.bitfinex.com:80",
         "http://service.iotasupport.com:14265",
         "http://node01.iotatoken.nl:14265",
         "http://node02.iotatoken.nl:14265",
@@ -51,7 +50,7 @@ window.iotaTransactionSpammer = (function(){
     var customProvider = null
 
     var depth = 10
-    var weight = 15
+    var weight = 14
     var spamSeed = generateSeed()
 
     const hostingSite = 'https://github.com/pRizz/iota.transactionSpammer.js'
@@ -127,7 +126,7 @@ window.iotaTransactionSpammer = (function(){
         eventEmitter.emitEvent('state', [`Performing PoW (Proof of Work) on ${localConfirmationCount} transactions`])
         iota.api.sendTransfer(spamSeed, generateDepth(), weight, transfers, function(error, success){
             if (error) {
-                eventEmitter.emitEvent('state', ['Error occurred while sending transactions'])
+                eventEmitter.emitEvent('state', [`Error occurred while sending transactions: ${error}`])
                 setTimeout(function(){
                     changeProviderAndSync()
                 }, 1000)
