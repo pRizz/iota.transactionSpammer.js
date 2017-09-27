@@ -6,6 +6,7 @@
 window.iotaTransactionSpammer = (function(){
     const iotaLib = window.IOTA
     const curl = window.curl
+    curl.init()
     var iota // initialized in initializeIOTA
     var started = false
 
