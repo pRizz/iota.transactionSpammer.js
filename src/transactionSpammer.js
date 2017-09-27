@@ -129,7 +129,7 @@ window.iotaTransactionSpammer = (function(){
                 eventEmitter.emitEvent('state', [`Error occurred while sending transactions: ${error}`])
                 setTimeout(function(){
                     changeProviderAndSync()
-                }, 1000)
+                }, 10000)
                 return
             }
             const transactionEndDate = Date.now()
