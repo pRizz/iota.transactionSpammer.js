@@ -23,6 +23,7 @@ window.iotaTransactionSpammer = (function(){
     })
 
     // from 'https://iotasupport.com/providers.json' + requested additions - unreliable nodes
+    // message me on Slack (Peter Ryszkiewicz) or make an issue here is you want your node added: https://github.com/pRizz/iota.transactionSpammer.js/issues
     const httpProviders = [
         "http://service.iotasupport.com:14265",
         "http://node01.iotatoken.nl:14265",
@@ -36,13 +37,15 @@ window.iotaTransactionSpammer = (function(){
         "http://176.9.3.149:14265",
         "http://node.lukaseder.de:14265",
         "http://iota.preissler.me:80",
-        "http://iota.love:16000"
+        "http://iota.love:16000",
+        "http://iotanode.prizziota.com:80", // author's node :)
     ]
 
     const httpsProviders = [
         //'https://node.tangle.works:443', // commented out due to network issues; asked by node operator
         //'https://n1.iota.nu:443' // commented out due to network issues; asked by node operator
-        "https://iota.preissler.me:443"
+        "https://iota.preissler.me:443",
+        "https://iotanode.prizziota.com:443", // author's node :)
     ]
 
     const validProviders = getValidProviders()
