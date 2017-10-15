@@ -42,33 +42,31 @@ window.iotaTransactionSpammer = (function(){
     ]
 
     const httpsProviders = [
-        //'https://node.tangle.works:443', // commented out due to network issues; asked by node operator
-        //'https://n1.iota.nu:443' // commented out due to network issues; asked by node operator
         "https://iota.preissler.me:443",
         "https://iotanode.prizziota.com:443", // author's node :)
     ]
 
     const validProviders = getValidProviders()
-    var _currentProvider = getRandomProvider()
+    let _currentProvider = getRandomProvider()
 
     // Overrides the _currentProvider
-    var customProvider = null
+    let customProvider = null
 
-    var depth = 10
-    var weight = 14
-    var spamSeed = generateSeed()
+    let depth = 10
+    let weight = 14
+    let spamSeed = generateSeed()
 
     const hostingSite = 'https://github.com/pRizz/iota.transactionSpammer.js'
     const hostingSiteTritified = tritifyURL(hostingSite)
-    var message = hostingSiteTritified
-    var tag = "SEESITEINMESSAGE"
-    var numberOfTransfersInBundle = 1
+    let message = hostingSiteTritified
+    let tag = "SEESITEINMESSAGE"
+    let numberOfTransfersInBundle = 1
 
     const eventEmitter = new EventEmitter()
 
-    var transactionCount = 0
-    var confirmationCount = 0
-    var averageConfirmationDuration = 0 // milliseconds
+    let transactionCount = 0
+    let confirmationCount = 0
+    let averageConfirmationDuration = 0 // milliseconds
 
     function getCurrentProvider() {
         if (customProvider) { return customProvider }
@@ -137,9 +135,9 @@ window.iotaTransactionSpammer = (function(){
                 return callback(new Error("Invalid minWeightMagnitude"));
             }
 
-            var finalBundleTrytes = [];
-            var previousTxHash;
-            var i = 0;
+            let finalBundleTrytes = [];
+            let previousTxHash;
+            let i = 0;
 
             function loopTrytes() {
                 getBundleTrytes(trytes[i], function(error) {
@@ -164,7 +162,7 @@ window.iotaTransactionSpammer = (function(){
                 // IF there is a bundle, chain  the bundle transactions via
                 // trunkTransaction together
 
-                var txObject = iotaObj.utils.transactionObject(thisTrytes);
+                let txObject = iotaObj.utils.transactionObject(thisTrytes);
                 txObject.tag = txObject.obsoleteTag;
                 txObject.attachmentTimestamp = Date.now();
                 txObject.attachmentTimestampLowerBound = 0;
@@ -187,7 +185,7 @@ window.iotaTransactionSpammer = (function(){
                     txObject.branchTransaction = trunkTransaction;
                 }
 
-                var newTrytes = iotaObj.utils.transactionTrytes(txObject);
+                let newTrytes = iotaObj.utils.transactionTrytes(txObject);
 
                 curl.pow({trytes: newTrytes, minWeight: minWeightMagnitude}).then(function(nonce) {
                     var returnedTrytes = newTrytes.substr(0, 2673-81).concat(nonce);
