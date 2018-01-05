@@ -33,6 +33,7 @@ window.iotaTransactionSpammer = (function(){
         "http://mainnet.necropaz.com:14500",
         "http://node.lukaseder.de:14265",
         "http://iota.love:16000",
+        "http://iota-community.org:14265",
         "http://iotanode.prizziota.com:80", // author's node :)
     ]
 
