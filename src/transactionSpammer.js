@@ -271,6 +271,7 @@ window.iotaTransactionSpammer = (function(){
     }
 
     function changeProviderAndSync() {
+        globalErrorCooldown = 5000
         eventEmitter.emitEvent('state', ['Randomly changing IOTA nodes'])
         _currentProvider = getRandomProvider()
         eventEmitter.emitEvent('state', [`New IOTA node: ${getCurrentProvider()}`])
