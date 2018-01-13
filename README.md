@@ -8,7 +8,7 @@ See [https://prizz.github.io/iota-transaction-spammer-webapp/](https://prizz.git
 
 Add these files to your site and add these lines to the header of your html file
 ```
-<script type="text/javascript" src="src/lib/iota.min.js"></script>
+<script type="text/javascript" src="src/lib/iota.js"></script>
 <script type="text/javascript" src="src/lib/curl.min.js"></script>
 <script type="text/javascript" src="src/lib/EventEmitter.min.js"></script>
 <script type="text/javascript" src="src/transactionSpammer.js"></script>
