@@ -9,7 +9,7 @@ window.iotaTransactionSpammer = (function(){
     const MAX_TIMESTAMP_VALUE = (Math.pow(3,27) - 1) / 2 // from curl.min.js
     curl.init()
     let iota // initialized in initializeIOTA
-    let started = false
+    let isSpamming = false
     let globalErrorCooldown = 5000 // milliseconds
 
     // TODO: use this for listening to changes in options and emit change to eventEmitter
@@ -281,6 +281,11 @@ window.iotaTransactionSpammer = (function(){
     }
 
     function sendMessages() {
+        if(!isSpamming) {
+            eventEmitter.emitEvent('state', ['Stopped transaction spamming'])
+            return
+        }
+
         const transfers = generateTransfers()
         const transferCount = transfers.length
         const localConfirmationCount = transferCount * 2
@@ -330,6 +335,11 @@ window.iotaTransactionSpammer = (function(){
     }
 
     function checkIfNodeIsSynced() {
+        if(!isSpamming) {
+            eventEmitter.emitEvent('state', ['Stopped transaction spamming'])
+            return
+        }
+
         eventEmitter.emitEvent('state', ['Checking if node is synced'])
 
         iota.api.getNodeInfo(function(error, success){
@@ -362,6 +372,10 @@ window.iotaTransactionSpammer = (function(){
 
     // Only call if there is an error or there is no current spamming running
     function restartSpamming() {
+        if(!isSpamming) {
+            eventEmitter.emitEvent('state', ['Stopped transaction spamming'])
+            return
+        }
         eventEmitter.emitEvent('state', ['Restart transaction spamming'])
         initializeIOTA()
         checkIfNodeIsSynced()
@@ -406,14 +420,13 @@ window.iotaTransactionSpammer = (function(){
             if(params.hasOwnProperty("isLoadBalancing")) { optionsProxy.isLoadBalancing = params.isLoadBalancing }
         },
         startSpamming: function() {
-            if(started) { return }
-            started = true
+            if(isSpamming) { return }
+            isSpamming = true
             eventEmitter.emitEvent('state', ['Start transaction spamming'])
             restartSpamming()
         },
         stopSpamming: function() {
-            // TODO
-            console.error("stopSpamming() NOT IMPLEMENTED")
+            isSpamming = false
         },
         tritifyURL: tritifyURL,
         eventEmitter: eventEmitter, // TODO: emit an event when the provider randomly changes due to an error
