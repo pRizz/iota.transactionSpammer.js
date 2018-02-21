@@ -111,8 +111,8 @@ window.iotaTransactionSpammer = (function(){
     const eventEmitter = new EventEmitter()
 
     let transactionCount = 0
-    let confirmationCount = 0
-    let averageConfirmationDuration = 0 // milliseconds
+    let approvalCount = 0
+    let averageApprovalDuration = 0 // milliseconds
 
     function getNextErrorCooldown() {
         return globalErrorCooldown *= (1.5 + 0.5 * Math.random()) // backoff algorithm
@@ -288,9 +288,9 @@ window.iotaTransactionSpammer = (function(){
 
         const transfers = generateTransfers()
         const transferCount = transfers.length
-        const localConfirmationCount = transferCount * 2
+        const localApprovalCount = transferCount * 2
         const transactionStartDate = Date.now()
-        eventEmitter.emitEvent('state', [`Performing PoW (Proof of Work) on ${localConfirmationCount} transactions`])
+        eventEmitter.emitEvent('state', [`Performing PoW (Proof of Work) on ${localApprovalCount} transactions`])
         iota.api.sendTransfer(spamSeed, generateDepth(), weight, transfers, function(error, success){
             if (error) {
                 eventEmitter.emitEvent('state', [`Error occurred while sending transactions: ${error}`])
@@ -301,16 +301,16 @@ window.iotaTransactionSpammer = (function(){
             }
             const transactionEndDate = Date.now()
             const transactionDuration = transactionEndDate - transactionStartDate // milliseconds
-            const oldTotalConfirmationDuration = averageConfirmationDuration * confirmationCount
+            const oldTotalApprovalDuration = averageApprovalDuration * approvalCount
 
             transactionCount += transferCount
-            confirmationCount += localConfirmationCount
-            averageConfirmationDuration = (oldTotalConfirmationDuration + transactionDuration) / confirmationCount
+            approvalCount += localApprovalCount
+            averageApprovalDuration = (oldTotalApprovalDuration + transactionDuration) / approvalCount
 
-            eventEmitter.emitEvent('state', [`Completed PoW (Proof of Work) on ${localConfirmationCount} transactions`])
+            eventEmitter.emitEvent('state', [`Completed PoW (Proof of Work) on ${localApprovalCount} transactions`])
             eventEmitter.emitEvent('transactionCountChanged', [transactionCount])
-            eventEmitter.emitEvent('confirmationCountChanged', [confirmationCount])
-            eventEmitter.emitEvent('averageConfirmationDurationChanged', [averageConfirmationDuration])
+            eventEmitter.emitEvent('approvalCountChanged', [approvalCount])
+            eventEmitter.emitEvent('averageApprovalDurationChanged', [averageApprovalDuration])
 
             eventEmitter.emitEvent('transactionCompleted', [success])
 
@@ -431,8 +431,8 @@ window.iotaTransactionSpammer = (function(){
         tritifyURL: tritifyURL,
         eventEmitter: eventEmitter, // TODO: emit an event when the provider randomly changes due to an error
         getTransactionCount: () => transactionCount,
-        getConfirmationCount: () => confirmationCount,
-        getAverageConfirmationDuration: () => averageConfirmationDuration,
+        getApprovalCount: () => approvalCount,
+        getAverageApprovalDuration: () => averageApprovalDuration,
         httpProviders: httpProviders,
         httpsProviders: httpsProviders,
         validProviders: validProviders,
