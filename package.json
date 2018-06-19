@@ -1,0 +1,29 @@
+{
+  "name": "iota.transactionspammer",
+  "version": "1.0.0",
+  "description": "Spams the IOTA network with dummy messages, confirming transactions while doing so.",
+  "main": "./src/transactionSpammer.js",
+  "bin": "./src/cli.js",
+  "dependencies": {
+    "curl.lib.js": "^1.0.22",
+    "iota.lib.js": "^0.4.7",
+    "wolfy87-eventemitter": "^5.2.4"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "mocha"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/pRizz/iota.transactionSpammer.js.git"
+  },
+  "keywords": [
+    "IOTA"
+  ],
+  "author": "Peter Ryszkiewicz",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/pRizz/iota.transactionSpammer.js/issues"
+  },
+  "homepage": "https://github.com/pRizz/iota.transactionSpammer.js#readme"
+}
