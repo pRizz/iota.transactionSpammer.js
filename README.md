@@ -25,3 +25,13 @@ iotaTransactionSpammer.options({
 })
 iotaTransactionSpammer.startSpamming()
 ```
+
+## Headless Usage
+
+This can be installed with `npm` and run on the command line.
+
+    npm intall -g iota.transactionspammer
+
+And run with
+
+    iota.transactionspammer
