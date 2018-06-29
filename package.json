@@ -1,9 +1,9 @@
 {
   "name": "iota.transactionspammer",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "Spams the IOTA network with dummy messages, confirming transactions while doing so.",
   "main": "./src/transactionSpammer.js",
-  "bin": "src/cli.js",
+  "bin": "./src/cli.js",
   "dependencies": {
     "ccurl-prizz": "github:pRizz/ccurl#npm-package",
     "iota.lib.js": "^0.4.7",
