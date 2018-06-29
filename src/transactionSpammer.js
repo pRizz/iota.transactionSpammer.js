@@ -3,8 +3,8 @@
  * https://github.com/pRizz/iota.transactionSpammer.js
  */
 
-const iotaLib = window.IOTA
-const curl = window.curl
+const iotaLib = require('iota.lib.js')
+const curl = require('curl.lib.js')
 const MAX_TIMESTAMP_VALUE = (Math.pow(3,27) - 1) / 2 // from curl.min.js
 curl.init()
 let iota // initialized in initializeIOTA
@@ -386,6 +386,15 @@ function tritifyURL(urlString) {
     return urlString.replace(/:/gi, 'COLON').replace(/\./gi, 'DOT').replace(/\//gi, 'SLASH').replace(/-/gi, 'DASH').toUpperCase()
 }
 
+function startSpamming() {
+    if(isSpamming) { return }
+    isSpamming = true
+    eventEmitter.emitEvent('state', ['Start transaction spamming'])
+    restartSpamming()
+}
+
+startSpamming()
+
 module.exports = {
     // Get options, or set options if params are specified
     options: function(params) {
@@ -418,12 +427,7 @@ module.exports = {
         if(params.hasOwnProperty("numberOfTransfersInBundle")) { numberOfTransfersInBundle = params.numberOfTransfersInBundle }
         if(params.hasOwnProperty("isLoadBalancing")) { optionsProxy.isLoadBalancing = params.isLoadBalancing }
     },
-    startSpamming: function() {
-        if(isSpamming) { return }
-        isSpamming = true
-        eventEmitter.emitEvent('state', ['Start transaction spamming'])
-        restartSpamming()
-    },
+    startSpamming,
     stopSpamming: function() {
         isSpamming = false
     },

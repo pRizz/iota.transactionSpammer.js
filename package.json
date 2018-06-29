@@ -5,7 +5,7 @@
   "main": "./src/transactionSpammer.js",
   "bin": "./src/cli.js",
   "dependencies": {
-    "curl.lib.js": "^1.0.22",
+    "curl.lib.js": "github:pRizz/curl.lib.js#headlessCurl",
     "iota.lib.js": "^0.4.7",
     "wolfy87-eventemitter": "^5.2.4"
   },
