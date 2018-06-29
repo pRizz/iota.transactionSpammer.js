@@ -28,70 +28,70 @@ const optionsProxy = new Proxy({
 // from 'https://iotasupport.com/providers.json' + requested additions - unreliable nodes
 // message me on Slack (Peter Ryszkiewicz) or make an issue here is you want your node added: https://github.com/pRizz/iota.transactionSpammer.js/issues
 const httpProviders = [
-    // "http://iota-community.org:14265",
-    // "http://node.davidsiota.com:14265",
-    // "http://173.249.18.180:14265",
-    // "http://iotanode.party:14265",
-    // "http://node03.iotatoken.nl:14265",
-    // "http://node.lukaseder.de:14265",
-    // "http://node01.iotatoken.nl:14265",
-    // "http://node05.iotatoken.nl:16265",
-    // "http://cryptoiota.win:14265",
-    // "http://137.74.198.100:14265",
-    // "http://astra2261.startdedicated.net:14265",
-    // "http://88.198.230.98:14265",
-    // "http://176.9.3.149:14265",
-    // "http://5.9.149.169:14265",
-    // "http://5.9.118.112:14265",
-    // "http://node02.iotatoken.nl:14265",
-    // "http://node04.iotatoken.nl:14265",
-    // "http://iota.love:16000",
-    // "http://iota.glass:14265",
-    // "http://35.189.126.122:14265",
-    // "http://rmnode.de:14265",
-    // "http://35.198.122.103:14265",
-    // "http://173.249.19.121:14265",
-    // "http://india.is.pure.iota.sex:14265",
-    // "http://iota.bereliable.nl:14265",
-    // "http://45.77.232.81:14265",
-    // "http://iota01.nodes.no:14265",
-    // "http://45.76.246.130:14265",
-    // "http://173.249.16.113:14265",
-    // "http://node.hans0r.de:14265",
-    // "http://iota.kun.com:14265",
-    // "http://37.221.197.91:14265",
-    // "http://my.iotaserver.de:14265",
-    // "http://node.iota.com.tw:5000",
-    // "http://iota.teamveno.eu:14265",
-    // "http://35.197.197.126:14265",
-    // "http://82.220.37.227:14265",
-    // "http://emslaender.spdns.eu:14265",
-    // "http://37.205.12.49:14265",
-    // "http://iota.3n.no:14265",
-    // "http://iota2.3n.no:14265",
-    // "http://173.249.22.101:14265",
-    // "http://173.249.18.125:14265",
-    // "http://pubtest.iotaboost.com:14625",
-    // "http://213.136.88.82:14265",
-    // "http://5.189.128.164:14265",
-    // "http://heimelaga.vodka:14265",
-    // "http://iotausa.mooo.com:14265",
-    // "http://iota.band:14265",
-    // "http://iotanode.prizziota.com:80", // author's node :)
-    // 'http://iota-node-nelson.prizziota.com:80', // author's node :)
+    "http://iota-community.org:14265",
+    "http://node.davidsiota.com:14265",
+    "http://173.249.18.180:14265",
+    "http://iotanode.party:14265",
+    "http://node03.iotatoken.nl:14265",
+    "http://node.lukaseder.de:14265",
+    "http://node01.iotatoken.nl:14265",
+    "http://node05.iotatoken.nl:16265",
+    "http://cryptoiota.win:14265",
+    "http://137.74.198.100:14265",
+    "http://astra2261.startdedicated.net:14265",
+    "http://88.198.230.98:14265",
+    "http://176.9.3.149:14265",
+    "http://5.9.149.169:14265",
+    "http://5.9.118.112:14265",
+    "http://node02.iotatoken.nl:14265",
+    "http://node04.iotatoken.nl:14265",
+    "http://iota.love:16000",
+    "http://iota.glass:14265",
+    "http://35.189.126.122:14265",
+    "http://rmnode.de:14265",
+    "http://35.198.122.103:14265",
+    "http://173.249.19.121:14265",
+    "http://india.is.pure.iota.sex:14265",
+    "http://iota.bereliable.nl:14265",
+    "http://45.77.232.81:14265",
+    "http://iota01.nodes.no:14265",
+    "http://45.76.246.130:14265",
+    "http://173.249.16.113:14265",
+    "http://node.hans0r.de:14265",
+    "http://iota.kun.com:14265",
+    "http://37.221.197.91:14265",
+    "http://my.iotaserver.de:14265",
+    "http://node.iota.com.tw:5000",
+    "http://iota.teamveno.eu:14265",
+    "http://35.197.197.126:14265",
+    "http://82.220.37.227:14265",
+    "http://emslaender.spdns.eu:14265",
+    "http://37.205.12.49:14265",
+    "http://iota.3n.no:14265",
+    "http://iota2.3n.no:14265",
+    "http://173.249.22.101:14265",
+    "http://173.249.18.125:14265",
+    "http://pubtest.iotaboost.com:14625",
+    "http://213.136.88.82:14265",
+    "http://5.189.128.164:14265",
+    "http://heimelaga.vodka:14265",
+    "http://iotausa.mooo.com:14265",
+    "http://iota.band:14265",
+    "http://iotanode.prizziota.com:80", // author's node :)
+    'http://iota-node-nelson.prizziota.com:80', // author's node :)
 ]
 
 const httpsProviders = [
-    // "https://node.iota-community.org:443",
-    // "https://iotanode.us:443",
-    // "https://iri3-api.iota.fm:443",
-    // "https://node.iota.dance:443",
-    // "https://nodes.iota.cafe:443",
-    // "https://iri2-api.iota.fm:443",
-    // "https://nelson1-api.iota.fm:443",
-    // "https://node.neffware.com:443",
-    // "https://wallet1.iota.town:443",
-    // "https://iotanode.prizziota.com:443", // author's node :)
+    "https://node.iota-community.org:443",
+    "https://iotanode.us:443",
+    "https://iri3-api.iota.fm:443",
+    "https://node.iota.dance:443",
+    "https://nodes.iota.cafe:443",
+    "https://iri2-api.iota.fm:443",
+    "https://nelson1-api.iota.fm:443",
+    "https://node.neffware.com:443",
+    "https://wallet1.iota.town:443",
+    "https://iotanode.prizziota.com:443", // author's node :)
     'https://iota-node-nelson.prizziota.com:443', // author's node :)
 ]
 
@@ -248,106 +248,16 @@ const localAttachToTangle = function(trunkTransaction, branchTransaction, minWei
                 if(error) {
                     return callback(error)
                 }
-            // curl.pow({trytes: newTrytes, minWeight: minWeightMagnitude}).then(function(nonce) {
-            //     var returnedTrytes = newTrytes.substr(0, 2673-81).concat(nonce);
-                var newTxObject= iotaObj.utils.transactionObject(returnedTrytes);
+
+                let newTxObject= iotaObj.utils.transactionObject(returnedTrytes);
 
                 // Assign the previousTxHash to this tx
-                var txHash = newTxObject.hash;
+                let txHash = newTxObject.hash;
                 previousTxHash = txHash;
 
                 finalBundleTrytes.push(returnedTrytes);
                 callback(null);
             })
-
-
-
-
-
-
-
-
-
-          // console.log('thisTrytes/length')
-          // console.log(thisTrytes.length)
-          // if (!previousTxHash) {
-          //
-          //   var txObject = iota.utils.transactionObject(thisTrytes);
-          //
-          //   // Check if last transaction in the bundle
-          //   if (txObject.lastIndex !== txObject.currentIndex) {
-          //     return callback(new Error("Wrong bundle order. The bundle should be ordered in descending order from currentIndex"));
-          //   }
-          //
-          //   txObject.trunkTransaction = trunkTransaction;
-          //   txObject.branchTransaction = branchTransaction;
-          //
-          //   var newTrytes = iota.utils.transactionTrytes(txObject);
-          //
-          //   // cCurl updates the nonce as well as the transaction hash
-          //   curl.ccurl_pow.async(newTrytes, minWeightMagnitude, function(error, returnedTrytes) {
-          //
-          //     if (error) {
-          //       return callback(error);
-          //     }
-          //
-          //     var newTxObject= iota.utils.transactionObject(returnedTrytes);
-          //
-          //     console.log('new object:')
-          //     console.log(newTxObject)
-          //     console.log('returned trytes:')
-          //     console.log(returnedTrytes.length)
-          //     console.log(returnedTrytes)
-          //
-          //
-          //     // Assign the previousTxHash to this tx
-          //     var txHash = newTxObject.hash;
-          //     previousTxHash = txHash;
-          //
-          //       // returnedTrytes = returnedTrytes.substr(0, 2673-81).concat(newTxObject.nonce);
-          //
-          //
-          //       // finalBundleTrytes.push(returnedTrytes);
-          //     finalBundleTrytes.push(iota.utils.transactionTrytes(newTxObject));
-          //
-          //     return callback(null);
-          //   });
-          //
-          // } else {
-          //
-          //   var txObject = iota.utils.transactionObject(thisTrytes);
-          //
-          //   // Chain the bundle together via the trunkTransaction (previous tx in the bundle)
-          //   // Assign the supplied trunkTransaciton as branchTransaction
-          //   txObject.trunkTransaction = previousTxHash;
-          //   txObject.branchTransaction = trunkTransaction;
-          //
-          //   var newTrytes = iota.utils.transactionTrytes(txObject);
-          //
-          //   // cCurl updates the nonce as well as the transaction hash
-          //   curl.ccurl_pow.async(newTrytes, minWeightMagnitude, function(error, returnedTrytes) {
-          //
-          //     if (error) {
-          //
-          //       return callback(error);
-          //     }
-          //
-          //     var newTxObject= iota.utils.transactionObject(returnedTrytes);
-          //
-          //     console.log('returned trytes:')
-          //     console.log(returnedTrytes.length)
-          //     console.log(returnedTrytes)
-          //
-          //     // Assign the previousTxHash to this tx
-          //     var txHash = newTxObject.hash;
-          //     previousTxHash = txHash;
-          //
-          //     finalBundleTrytes.push(iota.utils.transactionTrytes(newTxObject));
-          //
-          //     return callback(null);
-          //   });
-          // }
-
         }
         loopTrytes()
     }
@@ -494,8 +404,6 @@ eventEmitter.on('state', (state) => {
     console.log(`${new Date().toISOString()}: ${state}`)
 })
 
-startSpamming()
-
 module.exports = {
     // Get options, or set options if params are specified
     options: function(params) {
@@ -533,7 +441,7 @@ module.exports = {
         isSpamming = false
     },
     tritifyURL: tritifyURL,
-        eventEmitter: eventEmitter, // TODO: emit an event when the provider randomly changes due to an error
+    eventEmitter: eventEmitter, // TODO: emit an event when the provider randomly changes due to an error
     getTransactionCount: () => transactionCount,
     getApprovalCount: () => approvalCount,
     getAverageApprovalDuration: () => averageApprovalDuration,

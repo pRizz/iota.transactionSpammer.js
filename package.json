@@ -7,7 +7,7 @@
   "dependencies": {
     "ccurl-prizz": "github:pRizz/ccurl#npm-package",
     "iota.lib.js": "^0.4.7",
-    "wolfy87-eventemitter": "^5.2.4"
+    "wolfy87-eventemitter": "^5.2.5"
   },
   "devDependencies": {},
   "scripts": {
