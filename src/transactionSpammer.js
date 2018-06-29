@@ -220,7 +220,7 @@ const localAttachToTangle = function(trunkTransaction, branchTransaction, minWei
             // trunkTransaction together
 
             let txObject = iotaObj.utils.transactionObject(thisTrytes);
-            txObject.tag = txObject.obsoleteTag;
+            txObject.tag = txObject.tag || txObject.obsoleteTag;
             txObject.attachmentTimestamp = Date.now();
             txObject.attachmentTimestampLowerBound = 0;
             txObject.attachmentTimestampUpperBound = MAX_TIMESTAMP_VALUE;
