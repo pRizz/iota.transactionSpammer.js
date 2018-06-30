@@ -5,7 +5,8 @@
   "main": "./src/transactionSpammer.js",
   "bin": "./src/cli.js",
   "dependencies": {
-    "ccurl-prizz": "github:pRizz/ccurl#npm-package",
+    "curl-transaction-ccurl-impl": "^1.0.0",
+    "curl-transaction-core": "^1.0.0",
     "iota.lib.js": "^0.4.7",
     "wolfy87-eventemitter": "^5.2.5"
   },

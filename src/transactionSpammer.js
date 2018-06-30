@@ -4,12 +4,12 @@
  */
 
 const iotaLib = require('iota.lib.js')
-// const curl = require('curl.lib.js')
-const curl = require('ccurl-prizz')
+const ccurlImpl = require('curl-transaction-ccurl-impl')
+const curlTransaction = require('curl-transaction-core')
+const curl = curlTransaction({ curlImpl: ccurlImpl })
+
 const EventEmitter = require('wolfy87-eventemitter')
 
-const MAX_TIMESTAMP_VALUE = (Math.pow(3,27) - 1) / 2 // from curl.min.js
-// curl.init()
 let iota // initialized in initializeIOTA
 let isSpamming = false
 let globalErrorCooldown = 5000 // milliseconds
@@ -117,7 +117,7 @@ let approvalCount = 0
 let averageApprovalDuration = 0 // milliseconds
 
 function getNextErrorCooldown() {
-    return globalErrorCooldown *= (1.5 + 0.5 * Math.random()) // backoff algorithm
+    return globalErrorCooldown *= (1.2 + 0.5 * Math.random()) // backoff algorithm
 }
 
 function getCurrentProvider() {
@@ -174,106 +174,11 @@ function generateTransfer() {
 
 // adapted from https://github.com/iotaledger/wallet/blob/master/ui/js/iota.lightwallet.js
 const localAttachToTangle = function(trunkTransaction, branchTransaction, minWeightMagnitude, trytes, callback) {
-    const ccurlHashing = function(trunkTransaction, branchTransaction, minWeightMagnitude, trytes, callback) {
-        const iotaObj = iota;
-
-        // inputValidator: Check if correct hash
-        if (!iotaObj.valid.isHash(trunkTransaction)) {
-            return callback(new Error("Invalid trunkTransaction"));
-        }
-
-        // inputValidator: Check if correct hash
-        if (!iotaObj.valid.isHash(branchTransaction)) {
-            return callback(new Error("Invalid branchTransaction"));
-        }
-
-        // inputValidator: Check if int
-        if (!iotaObj.valid.isValue(minWeightMagnitude)) {
-            return callback(new Error("Invalid minWeightMagnitude"));
-        }
-
-        let finalBundleTrytes = [];
-        let previousTxHash;
-        let i = 0;
-
-        function loopTrytes() {
-            getBundleTrytes(trytes[i], function(error) {
-                if (error) {
-                    return callback(error);
-                } else {
-                    i++;
-                    if (i < trytes.length) {
-                        loopTrytes();
-                    } else {
-                        // reverse the order so that it's ascending from currentIndex
-                        return callback(null, finalBundleTrytes.reverse());
-                    }
-                }
-            });
-        }
-
-        function getBundleTrytes(thisTrytes, callback) {
-            // PROCESS LOGIC:
-            // Start with last index transaction
-            // Assign it the trunk / branch which the user has supplied
-            // IF there is a bundle, chain  the bundle transactions via
-            // trunkTransaction together
-
-            let txObject = iotaObj.utils.transactionObject(thisTrytes);
-            txObject.tag = txObject.tag || txObject.obsoleteTag;
-            txObject.attachmentTimestamp = Date.now();
-            txObject.attachmentTimestampLowerBound = 0;
-            txObject.attachmentTimestampUpperBound = MAX_TIMESTAMP_VALUE;
-            // If this is the first transaction, to be processed
-            // Make sure that it's the last in the bundle and then
-            // assign it the supplied trunk and branch transactions
-            if (!previousTxHash) {
-                // Check if last transaction in the bundle
-                if (txObject.lastIndex !== txObject.currentIndex) {
-                    return callback(new Error("Wrong bundle order. The bundle should be ordered in descending order from currentIndex"));
-                }
-
-                txObject.trunkTransaction = trunkTransaction;
-                txObject.branchTransaction = branchTransaction;
-            } else {
-                // Chain the bundle together via the trunkTransaction (previous tx in the bundle)
-                // Assign the supplied trunkTransaciton as branchTransaction
-                txObject.trunkTransaction = previousTxHash;
-                txObject.branchTransaction = trunkTransaction;
-            }
-
-            let newTrytes = iotaObj.utils.transactionTrytes(txObject);
-
-            curl.ccurl_pow.async(newTrytes, minWeightMagnitude, function(error, returnedTrytes) {
-                if(error) {
-                    return callback(error)
-                }
-
-                let newTxObject= iotaObj.utils.transactionObject(returnedTrytes);
-
-                // Assign the previousTxHash to this tx
-                let txHash = newTxObject.hash;
-                previousTxHash = txHash;
-
-                finalBundleTrytes.push(returnedTrytes);
-                callback(null);
-            })
-        }
-        loopTrytes()
-    }
-
-    ccurlHashing(trunkTransaction, branchTransaction, minWeightMagnitude, trytes, function(error, success) {
-        if (error) {
-            console.log(error);
-        } else {
-            console.log(success);
-        }
-        if (callback) {
-            return callback(error, success);
-        } else {
-            return success;
-        }
-    })
+  curl.curl({ trunkTransaction, branchTransaction, minWeightMagnitude, trytesArray: trytes }).then((processedTrytes) => {
+      callback(null, processedTrytes)
+  }).catch((error) => {
+      callback(error)
+  })
 }
 
 function initializeIOTA() {
@@ -399,10 +304,6 @@ function startSpamming() {
     eventEmitter.emitEvent('state', ['Start transaction spamming'])
     restartSpamming()
 }
-
-eventEmitter.on('state', (state) => {
-    console.log(`${new Date().toISOString()}: ${state}`)
-})
 
 module.exports = {
     // Get options, or set options if params are specified
