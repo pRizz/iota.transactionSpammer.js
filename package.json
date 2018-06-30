@@ -1,6 +1,6 @@
 {
   "name": "iota.transactionspammer",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "description": "Spams the IOTA network with dummy messages, confirming transactions while doing so.",
   "main": "./src/transactionSpammer.js",
   "bin": "./src/cli.js",
